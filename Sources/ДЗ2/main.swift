@@ -1,56 +1,63 @@
 import Foundation
-class Word {
-    var name:String
-    var wordOflanguage = [String: String]()
-    
-    init(name:String,wordOflanguage:[String: String]) {
-    self.name = name
-    self.wordOflanguage = wordOflanguage
-  }
-}
-let Word1 = Word(name:"hello",wordOflanguage:["ru":"Привет","en":"Hello"])
-let Word2 = Word(name:"day",wordOflanguage:["ru":"День","en":"Day","pt":"Dia"])
 
-var words = [Word]()
-words.append(Word1)
-words.append(Word2)
-
-guard let k = readLine() else
-{
-    exit(0)}
-guard let l = readLine() else {
-    exit(0)}
-
-    if k != "" && l != ""
-{
-    Translate(k:k,l:l)
-}
-else 
-{
-    if k == "" && l != ""
-   {
-    Translate(l:l)
-   }
-   else if k != "" && l == ""
-   {
-       Translate(k:k)
-   }
-   else if k == "" && l == ""
-   {
-       Translate()
-   }
-}
+var mnWords: [String: [String: String]] = 
+["hello":["ru":"Привет","en":"Hello"],"day":["ru":"День","en":"Day","pt":"Dia"],"home":["ru":"Дом","en":"Home"]]
+    var answer = false
+    let arrayArguments = CommandLine.arguments
+    if arrayArguments.count == 5
+    {
+        var k=""
+        var l=""
+        for i in 0..<arrayArguments.count
+        {
+            if arrayArguments[i] == "-k"
+            {
+               k = arrayArguments[i+1]
+            }
+            if arrayArguments[i] == "-l"
+            {
+               l = arrayArguments[i+1]
+            }
+            
+        }
+        Translate(k:k,l:l)
+    }
+    if arrayArguments.count == 3
+    {
+        for i in 0..<arrayArguments.count
+        {
+            if arrayArguments[i] == "-k"
+            {
+               let k = arrayArguments[i+1]
+               Translate(k:k)
+            }
+            if arrayArguments[i] == "-l"
+            {
+               let l = arrayArguments[i+1]
+               Translate(l:l)
+            }
+        }
+    }
+    if arrayArguments.count == 1
+    {
+        Translate()
+    }
+    if answer == false
+    {
+        print("Not found")
+    }
 
 func Translate(k:String,l:String)
 {
-for word in words
+ for (word, dictionary) in mnWords
  {
-    if k == word.name
+    if k == word
     {
-        for (key, value) in word.wordOflanguage
+        for (language, value) in dictionary
         {
-            if l == key{
-                print(value)
+            if l == language{
+                print(value) 
+                answer = true
             }
         }
 
@@ -59,37 +66,40 @@ for word in words
 }
 func Translate(l:String)
 {
-    for word in words
- {
-    for (key, value) in word.wordOflanguage
+    for (_, dictionary) in mnWords
+   {
+        for (language, value) in dictionary
         {
-            if l == key {
-                print("\(key) = \(value)") }
+            if l == language {
+                print("\(language) = \(value)") 
+                answer = true}
         }
- }
+   }
 }
 
 func Translate(k:String)
 {
-    for word in words
+   for (word, dictionary) in mnWords
  {
-    if k == word.name
+    if k == word
     {
-        for (key, value) in word.wordOflanguage
+        for (language, value) in dictionary
         {
-                print("\(key):\(value)")
+                print("\(language):\(value)")
+                answer = true
+           }
         }
-    }
- }
+   }
 }
 func Translate()
 {
-    for word in words
- {
-    print(word.name)
-        for (key, value) in word.wordOflanguage
+    for (word, dictionary) in mnWords
+    {
+      print(word)
+        for (language, value) in dictionary
         {
-                print("\(key):\(value)")
+          print("\(language):\(value)")
+          answer = true
         }
- }
+    }
 }
